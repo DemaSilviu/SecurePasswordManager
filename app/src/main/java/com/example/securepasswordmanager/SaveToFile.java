@@ -26,7 +26,7 @@ public class SaveToFile extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_to_file);
-        UrlEditText = findViewById(R.id.UrlExitText);
+        UrlEditText = findViewById(R.id.UrlEditText);
         NameEditText = findViewById(R.id.NameEditText);
         PasswordEditText = findViewById(R.id.PasswordEditText);
         IdEditText = findViewById(R.id.IdEditText);

@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         NewAccountClicked();
-        EditAccountsClicked();
+        ViewAccountsClicked();
         ShareClicked();
     }
     private void NewAccountClicked()
@@ -28,13 +28,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-    private void EditAccountsClicked()
+    private void ViewAccountsClicked()
     {
-        Button EditAccountsButton = findViewById(R.id.EditAccountsButton);
+        Button EditAccountsButton = findViewById(R.id.ViewAccountsButton);
         EditAccountsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,EditAccounts.class));
+                startActivity(new Intent(MainActivity.this, ViewAccounts.class));
             }
         });
     }

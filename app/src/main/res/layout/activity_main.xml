@@ -43,7 +43,7 @@
         app:layout_constraintVertical_bias="0.157" />
 
     <Button
-        android:id="@+id/EditAccountsButton"
+        android:id="@+id/ViewAccountsButton"
         android:layout_width="wrap_content"
         android:layout_height="69dp"
         android:layout_marginStart="8dp"
@@ -54,7 +54,7 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="EDIT ACCOUNTS"
+        android:text=" ACCOUNTS"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.431"
@@ -79,6 +79,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.431"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/EditAccountsButton"
+        app:layout_constraintTop_toBottomOf="@+id/ViewAccountsButton"
         app:layout_constraintVertical_bias="0.259" />
 </android.support.constraint.ConstraintLayout>
