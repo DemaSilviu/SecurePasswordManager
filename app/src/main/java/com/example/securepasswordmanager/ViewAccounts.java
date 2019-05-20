@@ -25,6 +25,8 @@ public class ViewAccounts extends AppCompatActivity
     String [] Id = new String[LENGHT];
     String [] Password = new String[LENGHT];
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -33,6 +35,8 @@ public class ViewAccounts extends AppCompatActivity
         setContentView(R.layout.activity_view_accounts);
         myListView =(ListView) findViewById(R.id.listviewAcc);
         Load();
+        //EditAccount();
+        //DeleteAccount();
        /* while(Url[i] != null)
         {
             Log.d("String is !!!! = ",Url[i]);
@@ -42,7 +46,6 @@ public class ViewAccounts extends AppCompatActivity
         AdaptorClass  myAdapter = new AdaptorClass(ViewAccounts.this,Url,Name,Id,Password);
         myListView.setAdapter(myAdapter);
     }
-
 
     public void Load()
     {

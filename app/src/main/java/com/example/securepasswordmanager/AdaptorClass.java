@@ -9,19 +9,25 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
-public class AdaptorClass extends ArrayAdapter<String>
-{
-    String [] UrlAdapter ;
-    String [] NameAdapter ;
-    String [] IdAdapter ;
-    String [] PasswordAdapter ;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class AdaptorClass extends ArrayAdapter<String> {
+    String[] UrlAdapter;
+    String[] NameAdapter;
+    String[] IdAdapter;
+    String[] PasswordAdapter;
     Context myContext;
-    public AdaptorClass(Context context, String[] Url,String[] Name,String[] Id,String[] Password)
-    {
+
+    public AdaptorClass(Context context, String[] Url, String[] Name, String[] Id, String[] Password) {
         super(context, R.layout.lv_layout);
         this.UrlAdapter = Url;
         this.NameAdapter = Name;
@@ -29,18 +35,17 @@ public class AdaptorClass extends ArrayAdapter<String>
         this.PasswordAdapter = Password;
         this.myContext = context;
     }
+
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return NameAdapter.length;
     }
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder myViewHolder = new ViewHolder();
-        if(convertView == null)
-        {
+        if (convertView == null) {
             LayoutInflater myInflator = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = myInflator.inflate(R.layout.lv_layout, parent, false);
             myViewHolder.myUrl = (TextView) convertView.findViewById(R.id.rv_layout_Url);
@@ -50,41 +55,39 @@ public class AdaptorClass extends ArrayAdapter<String>
             myViewHolder.EditAccBtn = (Button) convertView.findViewById(R.id.EditAccBtn);
             myViewHolder.DeleteAccBtn = (Button) convertView.findViewById(R.id.DeleteAccBtn);
             convertView.setTag(myViewHolder);
-        }
-        else
-        {
+        } else {
             myViewHolder = (ViewHolder) convertView.getTag();
         }
-            myViewHolder.myUrl.setText(UrlAdapter[position]);
-            myViewHolder.myName.setText(NameAdapter[position]);
-            myViewHolder.myId.setText(IdAdapter[position]);
-            myViewHolder.myPassword.setText(PasswordAdapter[position]);
-       myViewHolder.EditAccBtn.setOnClickListener(new View.OnClickListener()
-        {
+        myViewHolder.myUrl.setText(UrlAdapter[position]);
+        myViewHolder.myName.setText(NameAdapter[position]);
+        myViewHolder.myId.setText(IdAdapter[position]);
+        myViewHolder.myPassword.setText(PasswordAdapter[position]);
+        myViewHolder.EditAccBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                int position = (Integer) v.getTag(); //  !!!! get position ? aici crapa si tot asa am gasit pe net ca se ia pozitia cand dai click pe un button in listview !!
-                Intent myIntent = new Intent(myContext,EditAccounts.class);
+            public void onClick(View v) {
+                View parentrow = (View) v.getParent();
+                ListView listView = (ListView) parentrow.getParent();
+                final int position = listView.getPositionForView(parentrow);
+                Intent myIntent = new Intent(myContext, EditAccounts.class);
                 myIntent.putExtra("Position", position);
                 myContext.startActivity(myIntent);
             }
         });
         myViewHolder.DeleteAccBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                int position = (Integer) v.getTag(); //  !!!! get position ? aici crapa si tot asa am gasit pe net ca se ia pozitia cand dai click pe un button in listview !!
-                Intent myIntent = new Intent(myContext,DeleteAccounts.class);
-                myIntent.putExtra("Position", position); // pass it to DeleteAccounts
-                myContext.startActivity(myIntent);//start DeleteAccounts
+            public void onClick(View v) {
+                View parentrow = (View) v.getParent();
+                ListView listView = (ListView) parentrow.getParent();
+                final int position = listView.getPositionForView(parentrow);
+
+
             }
         });
+
         return convertView;
     }
 
-    static class ViewHolder
-    {
+    static class ViewHolder {
         TextView myUrl;
         TextView myName;
         TextView myId;

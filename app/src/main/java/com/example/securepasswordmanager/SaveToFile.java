@@ -90,7 +90,7 @@ public class SaveToFile extends AppCompatActivity
                 fp.write(PasswordText.getBytes());
                 fp.write('\n');
                 Clear();
-                Toast.makeText(this, "Successfully saved to" + getFilesDir() + '/' + File_Name, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Successfully saved to" , Toast.LENGTH_LONG).show();
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
