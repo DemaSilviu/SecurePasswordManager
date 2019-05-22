@@ -17,6 +17,7 @@ import org.w3c.dom.Text;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -78,7 +79,17 @@ public class AdaptorClass extends ArrayAdapter<String> {
             public void onClick(View v) {
                 View parentrow = (View) v.getParent();
                 ListView listView = (ListView) parentrow.getParent();
-                final int position = listView.getPositionForView(parentrow);
+                int position = listView.getPositionForView(parentrow);
+                position = position * 4 + 1;
+                try
+                {
+                    DeleteAccount(position);
+
+                }
+                catch (IOException ie)
+                {
+                    ie.printStackTrace();
+                }
 
 
             }
@@ -94,5 +105,28 @@ public class AdaptorClass extends ArrayAdapter<String> {
         TextView myPassword;
         Button EditAccBtn;
         Button DeleteAccBtn;
+    }
+    public void DeleteAccount(int DeleteLine) throws IOException
+    {
+        File inputFile = new File("/data/data/com.example.securepasswordmanager/files/AccInformations.txt");
+        File tempFile = new File("/data/data/com.example.securepasswordmanager/files/AccTemporaryInformations.txt");
+
+        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+        String currentLine;
+        int count = 0;
+        while ((currentLine = reader.readLine()) != null) {
+            count++;
+            if (count == DeleteLine || count == DeleteLine+1 || count==DeleteLine+2 || count==DeleteLine+3 ) {
+                continue;
+            }
+            writer.write(currentLine + System.getProperty("line.separator"));
+        }
+        writer.close();
+        reader.close();
+        inputFile.delete();
+        tempFile.renameTo(inputFile);
+
     }
 }

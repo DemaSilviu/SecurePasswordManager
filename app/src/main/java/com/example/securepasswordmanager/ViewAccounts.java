@@ -1,5 +1,6 @@
 package com.example.securepasswordmanager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,20 +11,25 @@ import android.widget.ListView;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class ViewAccounts extends AppCompatActivity
 {
     private static final String File_Name = "AccInformations.txt";
-    private static final int LENGHT =100;
+    private  static int LENGHT = 100;
     ListView myListView;
     String[] Url = new String[LENGHT];
     String [] Name = new String [LENGHT];
     String [] Id = new String[LENGHT];
     String [] Password = new String[LENGHT];
+
+
 
 
 
@@ -35,14 +41,6 @@ public class ViewAccounts extends AppCompatActivity
         setContentView(R.layout.activity_view_accounts);
         myListView =(ListView) findViewById(R.id.listviewAcc);
         Load();
-        //EditAccount();
-        //DeleteAccount();
-       /* while(Url[i] != null)
-        {
-            Log.d("String is !!!! = ",Url[i]);
-            i++;
-        }
-        */
         AdaptorClass  myAdapter = new AdaptorClass(ViewAccounts.this,Url,Name,Id,Password);
         myListView.setAdapter(myAdapter);
     }
@@ -89,6 +87,7 @@ public class ViewAccounts extends AppCompatActivity
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
     }
 }

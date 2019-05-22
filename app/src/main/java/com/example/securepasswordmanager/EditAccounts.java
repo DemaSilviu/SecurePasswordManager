@@ -90,7 +90,7 @@ public class EditAccounts extends AppCompatActivity
         if(checks() !=0)
         {
             try {
-                ChangeFile(position,data);
+                ChangeFile(position,data); // edit data
                 Toast.makeText(this, "Account Successfully Edited" , Toast.LENGTH_LONG).show();
                 startActivity(new Intent(EditAccounts.this,MainActivity.class));
             } catch (IOException e) {
