@@ -48,7 +48,7 @@ public class EditAccounts extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                Save();
+                SaveEditedAcc();
             }
         });
     }
@@ -71,7 +71,7 @@ public class EditAccounts extends AppCompatActivity
             e.printStackTrace();
         }
     }
-    public void Save()
+    public void SaveEditedAcc()
     {
         String UrlEditText = EditUrlEditText.getText().toString();
         String NameEditText = EditNameEditText.getText().toString();
@@ -86,7 +86,6 @@ public class EditAccounts extends AppCompatActivity
         Intent myIntent = getIntent();
         int position = myIntent.getIntExtra("Position", 0);
         position=position*4; // each position means actually 4 lines inside the file
-        Log.d("Position : ","Value inside save method from editaccounts when button pressed !!" + position);
         if(checks() !=0)
         {
             try {

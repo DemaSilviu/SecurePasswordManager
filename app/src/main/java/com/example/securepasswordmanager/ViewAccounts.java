@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import java.io.BufferedReader;
@@ -17,29 +18,29 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 
 public class ViewAccounts extends AppCompatActivity
 {
     private static final String File_Name = "AccInformations.txt";
-    private  static int LENGHT = 100;
+
+    private int LENGHT=getFileLenght();
     ListView myListView;
     String[] Url = new String[LENGHT];
     String [] Name = new String [LENGHT];
     String [] Id = new String[LENGHT];
     String [] Password = new String[LENGHT];
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
         int i=0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_accounts);
         myListView =(ListView) findViewById(R.id.listviewAcc);
+        getFileLenght();
         Load();
         AdaptorClass  myAdapter = new AdaptorClass(ViewAccounts.this,Url,Name,Id,Password);
         myListView.setAdapter(myAdapter);
@@ -89,5 +90,38 @@ public class ViewAccounts extends AppCompatActivity
         }
 
 
+    }
+    private int getFileLenght()
+    {
+        try{
+
+            File file =new File("/data/data/com.example.securepasswordmanager/files/AccInformations.txt");
+
+            if(file.exists())
+            {
+                int linenumber=0;
+                FileReader fr = new FileReader(file);
+                LineNumberReader lnr = new LineNumberReader(fr);
+
+
+
+                while (lnr.readLine() != null)
+                {
+                    linenumber++;
+                }
+                lnr.close();
+
+
+                return linenumber/4;
+            }else
+                {
+                    Toast.makeText(this,"File Does Not Exist !",Toast.LENGTH_SHORT).show();
+                }
+
+        }catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        return 20;
     }
 }

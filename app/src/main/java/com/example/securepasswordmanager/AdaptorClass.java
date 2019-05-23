@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -84,7 +85,10 @@ public class AdaptorClass extends ArrayAdapter<String> {
                 try
                 {
                     DeleteAccount(position);
-
+                    Toast toast = Toast.makeText(myContext, "Successfully Deleted !", Toast.LENGTH_LONG);
+                    toast.show();
+                    Intent intent = new Intent(myContext,MainActivity.class);
+                    myContext.startActivity(intent);
                 }
                 catch (IOException ie)
                 {
@@ -129,4 +133,5 @@ public class AdaptorClass extends ArrayAdapter<String> {
         tempFile.renameTo(inputFile);
 
     }
+
 }
