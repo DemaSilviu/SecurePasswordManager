@@ -21,16 +21,14 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 
-public class ViewAccounts extends AppCompatActivity
+public class ViewAccounts extends AppCompatActivity implements FileDetails
 {
-    private static final String File_Name = "AccInformations.txt";
-
     private int LENGHT=getFileLenght();
     ListView myListView;
-    String[] Url = new String[LENGHT];
-    String [] Name = new String [LENGHT];
-    String [] Id = new String[LENGHT];
-    String [] Password = new String[LENGHT];
+    public String[] Url = new String[LENGHT];
+    public  String [] Name = new String [LENGHT];
+    public  String [] Id = new String[LENGHT];
+     public  String [] Password = new String[LENGHT];
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -95,7 +93,7 @@ public class ViewAccounts extends AppCompatActivity
     {
         try{
 
-            File file =new File("/data/data/com.example.securepasswordmanager/files/AccInformations.txt");
+            File file =new File(File_Path);
 
             if(file.exists())
             {

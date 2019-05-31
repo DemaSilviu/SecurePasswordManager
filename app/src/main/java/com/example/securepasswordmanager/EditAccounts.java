@@ -4,16 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -21,9 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class EditAccounts extends AppCompatActivity
+public class EditAccounts extends AppCompatActivity implements Accounts,FileDetails
 {
-    private static final String File_Name = "AccInformations.txt";
     EditText EditUrlEditText;
     EditText EditNameEditText;
     EditText EditIdEditText;
@@ -39,9 +33,24 @@ public class EditAccounts extends AppCompatActivity
         EditNameEditText = findViewById(R.id.EditNameEditText);
         EditIdEditText = findViewById(R.id.EditIdEditText);
         EditPasswordEditText = findViewById(R.id.EditPasswordEditText);
-        SaveButtonClicked();
+        showFields();
+        storage();
     }
-    private void SaveButtonClicked()
+    public void showFields()
+    {
+        Bundle extras = getIntent().getExtras();
+        String URL_SHOW = extras.getString("EXTRA_URL");
+        String NAME_SHOW = extras.getString("EXTRA_NAME");
+        String ID_SHOW = extras.getString("EXTRA_ID");
+        String PASSWORD_SHOW = extras.getString("EXTRA_PASSWORD");
+        EditUrlEditText.setText(URL_SHOW.toString());
+        EditNameEditText.setText(NAME_SHOW.toString());
+        EditIdEditText.setText(ID_SHOW.toString());
+        EditPasswordEditText.setText(PASSWORD_SHOW.toString());
+        EditPasswordEditText.setTransformationMethod(null);
+
+    }
+    public void storage()
     {
         Button SaveEditedAccountButton = (Button) findViewById(R.id.SaveEditedAccountsBtn);
         SaveEditedAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +63,7 @@ public class EditAccounts extends AppCompatActivity
     }
     public static void ChangeFile(int lineNumber, String[] data) throws IOException
     {
-        Path path = Paths.get("/data/data/com.example.securepasswordmanager/files/AccInformations.txt");
+        Path path = Paths.get(File_Path);
         List<String> lines = null;
         try {
             lines = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -85,7 +94,7 @@ public class EditAccounts extends AppCompatActivity
         checks();
         Intent myIntent = getIntent();
         int position = myIntent.getIntExtra("Position", 0);
-        position=position*4; // each position means actually 4 lines inside the file
+        position=position*4;
         if(checks() !=0)
         {
             try {

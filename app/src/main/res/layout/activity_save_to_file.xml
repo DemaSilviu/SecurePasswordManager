@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SaveToFile">
+    tools:context=".SaveToFile"
+    android:background="@color/blue">
     <EditText
         android:id="@+id/UrlEditText"
         android:layout_width="wrap_content"
@@ -23,7 +24,9 @@
         app:layout_constraintHorizontal_bias="0.368"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.189" />
+        app:layout_constraintVertical_bias="0.189"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"/>
 
     <EditText
         android:id="@+id/NameEditText"
@@ -43,7 +46,9 @@
         app:layout_constraintHorizontal_bias="0.368"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/UrlEditText"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintVertical_bias="0.043"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"/>
 
     <EditText
         android:id="@+id/IdEditText"
@@ -63,7 +68,9 @@
         app:layout_constraintHorizontal_bias="0.368"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/NameEditText"
-        app:layout_constraintVertical_bias="0.055" />
+        app:layout_constraintVertical_bias="0.055"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"/>
 
     <EditText
         android:id="@+id/PasswordEditText"
@@ -83,7 +90,9 @@
         app:layout_constraintHorizontal_bias="0.368"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/IdEditText"
-        app:layout_constraintVertical_bias="0.088" />
+        app:layout_constraintVertical_bias="0.088"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"/>
 
     <Button
         android:id="@+id/SaveToFileButton"
@@ -101,6 +110,8 @@
         app:layout_constraintHorizontal_bias="0.42"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PasswordEditText"
-        app:layout_constraintVertical_bias="0.295" />
+        app:layout_constraintVertical_bias="0.295"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"/>
 
 </android.support.constraint.ConstraintLayout>

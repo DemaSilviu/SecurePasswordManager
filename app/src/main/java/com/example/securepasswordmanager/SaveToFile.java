@@ -12,9 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class SaveToFile extends AppCompatActivity
+public class SaveToFile extends AppCompatActivity implements Accounts,FileDetails
 {
-    private static final String File_Name = "AccInformations.txt";
     EditText UrlEditText;
     EditText NameEditText;
     EditText PasswordEditText;
@@ -31,9 +30,9 @@ public class SaveToFile extends AppCompatActivity
         PasswordEditText = findViewById(R.id.PasswordEditText);
         IdEditText = findViewById(R.id.IdEditText);
         SaveToFileButton = findViewById(R.id.SaveToFileButton);
-        SaveButtonClicked();
+        storage();
     }
-    private void SaveButtonClicked()
+    public void storage()
     {
         Button SaveToFileButton = (Button) findViewById(R.id.SaveToFileButton);
         SaveToFileButton.setOnClickListener(new View.OnClickListener() {

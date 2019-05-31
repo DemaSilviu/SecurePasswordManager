@@ -4,10 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewAccounts">
+    tools:context=".ViewAccounts"
+    android:background="@color/blue">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listviewAcc" />
+        android:id="@+id/listviewAcc"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"/>
 </android.support.constraint.ConstraintLayout>

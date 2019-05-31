@@ -2,7 +2,9 @@ package com.example.securepasswordmanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.InputFilter;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +24,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class AdaptorClass extends ArrayAdapter<String> {
+public class AdaptorClass extends ArrayAdapter<String>  implements  FileDetails{
     String[] UrlAdapter;
     String[] NameAdapter;
     String[] IdAdapter;
     String[] PasswordAdapter;
     Context myContext;
+    EditText TooglePassword;
 
     public AdaptorClass(Context context, String[] Url, String[] Name, String[] Id, String[] Password) {
         super(context, R.layout.lv_layout);
@@ -36,6 +39,7 @@ public class AdaptorClass extends ArrayAdapter<String> {
         this.IdAdapter = Id;
         this.PasswordAdapter = Password;
         this.myContext = context;
+
     }
 
     @Override
@@ -44,7 +48,8 @@ public class AdaptorClass extends ArrayAdapter<String> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
 
         ViewHolder myViewHolder = new ViewHolder();
         if (convertView == null) {
@@ -64,14 +69,29 @@ public class AdaptorClass extends ArrayAdapter<String> {
         myViewHolder.myName.setText(NameAdapter[position]);
         myViewHolder.myId.setText(IdAdapter[position]);
         myViewHolder.myPassword.setText(PasswordAdapter[position]);
+        myViewHolder.myPassword.setTransformationMethod(new PasswordTransformationMethod());
         myViewHolder.EditAccBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 View parentrow = (View) v.getParent();
                 ListView listView = (ListView) parentrow.getParent();
+
                 final int position = listView.getPositionForView(parentrow);
                 Intent myIntent = new Intent(myContext, EditAccounts.class);
-                myIntent.putExtra("Position", position);
+                Bundle extras = new Bundle();
+                myIntent.putExtra("Position",position);
+                extras.putString("EXTRA_URL",UrlAdapter[position]);
+                extras.putString("EXTRA_NAME",NameAdapter[position]);
+                extras.putString("EXTRA_ID",IdAdapter[position]);
+                extras.putString("EXTRA_PASSWORD",PasswordAdapter[position]);
+                myIntent.putExtras(extras);
+                /*myIntent.putExtra("Position", position);
+                myIntent.putExtra("URL",UrlAdapter[position]);
+                myIntent.putExtra("URL",NameAdapter[position]);
+                myIntent.putExtra("URL",IdAdapter[position]);
+                myIntent.putExtra("URL",PasswordAdapter[position]);
+                */
+
                 myContext.startActivity(myIntent);
             }
         });
@@ -110,9 +130,9 @@ public class AdaptorClass extends ArrayAdapter<String> {
         Button EditAccBtn;
         Button DeleteAccBtn;
     }
-    public void DeleteAccount(int DeleteLine) throws IOException
+    private void DeleteAccount(int DeleteLine) throws IOException
     {
-        File inputFile = new File("/data/data/com.example.securepasswordmanager/files/AccInformations.txt");
+        File inputFile = new File(File_Path);
         File tempFile = new File("/data/data/com.example.securepasswordmanager/files/AccTemporaryInformations.txt");
 
         BufferedReader reader = new BufferedReader(new FileReader(inputFile));
