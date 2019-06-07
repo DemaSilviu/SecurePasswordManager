@@ -1,6 +1,7 @@
 package com.example.securepasswordmanager;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -18,24 +19,38 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
-public class Share extends AppCompatActivity implements AdapterView.OnItemClickListener{
-    private static final String TAG = "MainActivity";
-
+public class Share extends AppCompatActivity implements AdapterView.OnItemClickListener,FileDetails{
+    private static final String TAG = "Share Activity";
     BluetoothAdapter mBluetoothAdapter;
     Button btnEnableDisable_Discoverable;
-
     BTService mBluetoothConnection;
-
+    static String FILEPATH = "ReceivedAccounts.txt";
+    static File fileReceiveAccounts = new File(FILEPATH);
     Button btnStartConnection;
     Button btnSend;
+    private int cnt =0;
 
-    EditText etSend;
+    Button SelectAccountBtn;
+
 
     private static final UUID MY_UUID_INSECURE =
             UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
@@ -50,17 +65,20 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
         Button btnONOFF = (Button) findViewById(R.id.btnONOFF);
+        Button SelectAccountBtn = (Button) findViewById(R.id.SelectAccountBtn);
         btnEnableDisable_Discoverable = (Button) findViewById(R.id.btnDiscoverable_on_off);
+        Button btnSend = (Button) findViewById(R.id.btnSend);
+        Button BackToMenu= (Button) findViewById(R.id.BackToMenuButton);
         lvNewDevices = (ListView) findViewById(R.id.lvNewDevices);
         mBTDevices = new ArrayList<>();
 
         btnStartConnection = (Button) findViewById(R.id.btnStartConnection);
-        btnSend = (Button) findViewById(R.id.btnSend);
-        etSend = (EditText) findViewById(R.id.editText);
+
 
         //Broadcasts when bond state changes (ie:pairing)
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
@@ -77,6 +95,7 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
                 enableDisableBT();
             }
         });
+
         btnStartConnection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,11 +105,43 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                byte[] bytes = etSend.getText().toString().getBytes(Charset.defaultCharset());
-                mBluetoothConnection.write(bytes);
+            public void onClick(View view)
+            {
+                Bundle extras = getIntent().getExtras();
+                String SELECTED_NAME = extras.getString("EXTRA_NAME");
+                String SELECTED_ID = extras.getString("EXTRA_ID");
+                String SELECTED_PASSWORD = extras.getString("EXTRA_PASSWORD");
+                /*StringBuilder finalStringb =new StringBuilder();
+                finalStringb.append(SELECTED_NAME).append(",").append(SELECTED_ID).append(",").append(SELECTED_PASSWORD);
+
+                final String SendAccountsDetails = finalStringb.toString();
+                Log.d("ASJDASJFJASJFASJGJAGJAGJAJAGJAGJAJGA",SendAccountsDetails);
+                String finalString = finalStringb.toString();
+                */
+                /*String string = "GeeksForGeeks"
+                        + " - A Computer Science"
+                        + " Portal for geeks";
+                byte[] bytes = string.getBytes();
+                */
+
+                //mBluetoothConnection.write(bytes);
             }
         });
+        SelectAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Share.this,SelectAccToShare.class));
+            }
+        });
+        BackToMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Share.this,MainActivity.class));
+            }
+        });
+
+
+
 
     }
     // Create a BroadcastReceiver for ACTION_FOUND
@@ -213,13 +264,20 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy: called.");
         super.onDestroy();
         unregisterReceiver(mBroadcastReceiver1);
         unregisterReceiver(mBroadcastReceiver2);
         unregisterReceiver(mBroadcastReceiver3);
         unregisterReceiver(mBroadcastReceiver4);
         //mBluetoothAdapter.cancelDiscovery();
+    }
+    @Override
+    public void onBackPressed() {
+        if (1!=2) {
+            cnt++;
+        } else {
+            super.onBackPressed();
+        }
     }
 
 
@@ -335,12 +393,33 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
         //create the bond.
         //NOTE: Requires API 17+? I think this is JellyBean
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2){
+
             Log.d(TAG, "Trying to pair with " + deviceName);
             mBTDevices.get(i).createBond();
 
             mBTDevice = mBTDevices.get(i);
             mBluetoothConnection = new BTService(Share.this);
+
+    }
+    // use this in order to transform input received into a file
+    public void transformToFile(byte[] bytes)
+    {
+        try {
+
+            // Initialize a pointer
+            // in file using OutputStream
+            OutputStream
+                    os = new FileOutputStream(fileReceiveAccounts);
+
+            // Starts writing the bytes in it
+            os.write(bytes);
+            // Close the file
+            os.close();
+        }
+
+        catch (Exception e) {
+            System.out.println("Exception: " + e);
         }
     }
+
 }

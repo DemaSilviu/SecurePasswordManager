@@ -3,7 +3,6 @@ package com.example.securepasswordmanager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

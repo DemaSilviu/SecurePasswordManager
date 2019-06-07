@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity
         NewAccountClicked();
         ViewAccountsClicked();
         ShareClicked();
+        ReceivedAccountsClicked();
     }
     private void NewAccountClicked()
     {
@@ -26,6 +27,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,SaveToFile.class));
+            }
+        });
+    }
+    private void ReceivedAccountsClicked()
+    {
+        Button ReceivedAccounts = findViewById(R.id.ReceivedAccountsBtn);
+        ReceivedAccounts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,ReceivedAccounts.class));
             }
         });
     }

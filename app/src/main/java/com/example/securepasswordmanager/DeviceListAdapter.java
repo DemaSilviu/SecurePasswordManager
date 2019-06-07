@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,23 +13,20 @@ import java.util.ArrayList;
 
 public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
 
+    private LayoutInflater mLayoutInflater;
     private ArrayList<BluetoothDevice> mDevices;
     private int  mViewResourceId;
-    Context mContext;
 
-    public DeviceListAdapter(Context context, int tvResourceId, ArrayList<BluetoothDevice> devices)
-    {
-        super(context,R.layout.device_adapter_view);
-       // super(context, tvResourceId,devices);
+    public DeviceListAdapter(Context context, int tvResourceId, ArrayList<BluetoothDevice> devices){
+        super(context, tvResourceId,devices);
         this.mDevices = devices;
+        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mViewResourceId = tvResourceId;
-        this.mContext=context;
     }
-    @Override
+
     public View getView(int position, View convertView, ViewGroup parent) {
-        AdaptorClass.ViewHolder mViewHolder = new AdaptorClass.ViewHolder();
-        LayoutInflater myInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = myInflator.inflate(R.layout.device_adapter_view, parent, false);
+        convertView = mLayoutInflater.inflate(mViewResourceId, null);
+
         BluetoothDevice device = mDevices.get(position);
 
         if (device != null) {
@@ -46,10 +42,6 @@ public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
         }
 
         return convertView;
-    }
-    static class ViewHolder {
-        TextView deviceName;
-        TextView deviceAdress;
     }
 
 }
