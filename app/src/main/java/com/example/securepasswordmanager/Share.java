@@ -1,3 +1,14 @@
+/*
+Comment pt Darian xD
+Deci asta e clasa unde se intampla chestii. Mai jos ai butonu de Send
+(linia 110) aici primeste de la activitatea selectAccToShare contul care vrea userul sa il dea prin bluetooth.
+ Le-am bagat pe toate intr-un bundle de extras si le-am luat aici in clasa asta. Mna bun dupa aia fac un string cu name,id(username) si password.
+ Astea le pun intr-un string separate prin , si dupa ar trebui sa le bag pe toate intr-un fisier. In meniul aplicatiei e butonul de Received Accounts
+ Momentan asta incarca conturile din fisieru cu conturi nu din fisieru ce ar trebui sa il fac cu conturile primite prin bluetooth.
+ Problema e la linia 130. Cand apelez functia write. Ea se afla in clasa "BTService.java" e scrisa de 2 ori functia ca o data e scrisa sa o vada din clasa asta. Si aia o apeleaza defapt functia write
+ Momentan acolo e doar sa scrie textul primit ca asa era codu' lu nenea asta cand trimitea dintr-un textview. Eu acolo vreau sa iau inputstreamu si sa fac un fisier(sau sa dau append daca exista fisieru
+ adica daca o mai trimis inainte conturi si sa loadui dupa in activitatea ReceivedAccounts". Cam asta e filmul doar ca crapa acolo cand scriu funtia bytes
+*/
 package com.example.securepasswordmanager;
 
 import android.Manifest;
@@ -34,6 +45,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,8 +55,7 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
     BluetoothAdapter mBluetoothAdapter;
     Button btnEnableDisable_Discoverable;
     BTService mBluetoothConnection;
-    static String FILEPATH = "ReceivedAccounts.txt";
-    static File fileReceiveAccounts = new File(FILEPATH);
+
     Button btnStartConnection;
     Button btnSend;
     private int cnt =0;
@@ -111,20 +122,14 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
                 String SELECTED_NAME = extras.getString("EXTRA_NAME");
                 String SELECTED_ID = extras.getString("EXTRA_ID");
                 String SELECTED_PASSWORD = extras.getString("EXTRA_PASSWORD");
-                /*StringBuilder finalStringb =new StringBuilder();
-                finalStringb.append(SELECTED_NAME).append(",").append(SELECTED_ID).append(",").append(SELECTED_PASSWORD);
-
-                final String SendAccountsDetails = finalStringb.toString();
-                Log.d("ASJDASJFJASJFASJGJAGJAGJAJAGJAGJAJGA",SendAccountsDetails);
-                String finalString = finalStringb.toString();
-                */
-                /*String string = "GeeksForGeeks"
-                        + " - A Computer Science"
-                        + " Portal for geeks";
-                byte[] bytes = string.getBytes();
-                */
-
-                //mBluetoothConnection.write(bytes);
+                StringBuilder myStringBuilder = new StringBuilder(SELECTED_NAME);
+                myStringBuilder.append(",");
+                myStringBuilder.append(SELECTED_ID);
+                myStringBuilder.append(",");
+                myStringBuilder.append(SELECTED_PASSWORD);
+                String finalString = myStringBuilder.toString();
+                byte[] bytes = finalString.getBytes(Charset.defaultCharset());
+                mBluetoothConnection.write(bytes);
             }
         });
         SelectAccountBtn.setOnClickListener(new View.OnClickListener() {
@@ -402,24 +407,6 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
     }
     // use this in order to transform input received into a file
-    public void transformToFile(byte[] bytes)
-    {
-        try {
 
-            // Initialize a pointer
-            // in file using OutputStream
-            OutputStream
-                    os = new FileOutputStream(fileReceiveAccounts);
-
-            // Starts writing the bytes in it
-            os.write(bytes);
-            // Close the file
-            os.close();
-        }
-
-        catch (Exception e) {
-            System.out.println("Exception: " + e);
-        }
-    }
 
 }

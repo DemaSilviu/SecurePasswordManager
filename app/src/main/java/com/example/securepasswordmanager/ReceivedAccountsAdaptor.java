@@ -1,5 +1,3 @@
-
-
 package com.example.securepasswordmanager;
 
 import android.bluetooth.BluetoothDevice;
@@ -16,23 +14,24 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
-public class AccountShareAdaptor extends ArrayAdapter<BluetoothDevice> {
-
+public class ReceivedAccountsAdaptor extends ArrayAdapter<BluetoothDevice>
+{
     String[] NameAdapter;
     String[] IdAdapter;
     String[] PasswordAdapter;
     Context myContext;
 
-    public AccountShareAdaptor(Context context,String[] Name, String[] Id, String[] Password){
-        super(context, R.layout.lv_acctoshare);
+    public ReceivedAccountsAdaptor(Context context,String[] Name, String[] Id, String[] Password)
+    {
+        super(context, R.layout.lv_received_accounts_ui);
         this.NameAdapter = Name;
         this.IdAdapter = Id;
         this.PasswordAdapter = Password;
         this.myContext = context;
     }
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return NameAdapter.length;
     }
 
@@ -41,20 +40,20 @@ public class AccountShareAdaptor extends ArrayAdapter<BluetoothDevice> {
         ViewHolder myViewHolder = new ViewHolder();
         if (convertView == null) {
             LayoutInflater myInflator = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = myInflator.inflate(R.layout.lv_acctoshare, parent, false);
-            myViewHolder.myName = (TextView) convertView.findViewById(R.id.ReceivedName);
-            myViewHolder.myId = (TextView) convertView.findViewById(R.id.ReceivedId);
-            myViewHolder.myPassword = (TextView) convertView.findViewById(R.id.ReceivedPassword);
-            myViewHolder.SelectAccountBtn = (Button) convertView.findViewById(R.id.SelectAccountBtn);
+            convertView = myInflator.inflate(R.layout.lv_received_accounts_ui, parent, false);
+            myViewHolder.myName = (TextView) convertView.findViewById(R.id.sharedAccName);
+            myViewHolder.myId = (TextView) convertView.findViewById(R.id.sharedAccId);
+            myViewHolder.myPassword = (TextView) convertView.findViewById(R.id.sharedAccPassword);
+            myViewHolder.UseAccountBtn = (Button) convertView.findViewById(R.id.UseAccountBtn);
             convertView.setTag(myViewHolder);
         } else {
-            myViewHolder = (AccountShareAdaptor.ViewHolder) convertView.getTag();
+            myViewHolder = (ReceivedAccountsAdaptor.ViewHolder) convertView.getTag();
         }
         myViewHolder.myName.setText(NameAdapter[position]);
         myViewHolder.myId.setText(IdAdapter[position]);
         myViewHolder.myPassword.setText(PasswordAdapter[position]);
         myViewHolder.myPassword.setTransformationMethod(new PasswordTransformationMethod());
-        myViewHolder.SelectAccountBtn.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.UseAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -77,11 +76,11 @@ public class AccountShareAdaptor extends ArrayAdapter<BluetoothDevice> {
         return convertView;
     }
 
-    static class ViewHolder {
+    static class ViewHolder
+    {
         TextView myName;
         TextView myId;
         TextView myPassword;
-        Button SelectAccountBtn;
+        Button UseAccountBtn;
     }
-
 }

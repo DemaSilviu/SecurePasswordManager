@@ -1,5 +1,4 @@
 package com.example.securepasswordmanager;
-
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -255,7 +254,8 @@ public class BTService {
                     bytes = mmInStream.read(buffer);
                     String incomingMessage = new String(buffer, 0, bytes);
                     Log.d(TAG, "InputStream: " + incomingMessage);
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
                     break;
                 }
@@ -264,12 +264,10 @@ public class BTService {
 
         //Call this from the main activity to send data to the remote device
         public void write(byte[] bytes) {
-            String text = new String(bytes);
+            String text = new String(bytes, Charset.defaultCharset());
             Log.d(TAG, "write: Writing to outputstream: " + text);
             try {
                 mmOutStream.write(bytes);
-                mProgressDialog = ProgressDialog.show(mContext,"SENDING ACCOUNT..."
-                        ,"Please Wait...",true);
             } catch (IOException e) {
                 Log.e(TAG, "write: Error writing to output stream. " + e.getMessage() );
             }
@@ -308,4 +306,3 @@ public class BTService {
     }
 
 }
-
