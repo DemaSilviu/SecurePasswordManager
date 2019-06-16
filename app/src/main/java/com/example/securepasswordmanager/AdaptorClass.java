@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
+//Adaptor that ViewAccounts needs in order to populate the list view
 public class AdaptorClass extends ArrayAdapter<String>  implements  FileDetails{
     String[] UrlAdapter;
     String[] NameAdapter;

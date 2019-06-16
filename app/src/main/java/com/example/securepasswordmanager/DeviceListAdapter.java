@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
+//Adaptor that BTService class needs
 public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
 
     private LayoutInflater mLayoutInflater;
@@ -26,9 +26,9 @@ public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = mLayoutInflater.inflate(mViewResourceId, null);
-
+        // get position of device clicked
         BluetoothDevice device = mDevices.get(position);
-
+// get deviceName and adress
         if (device != null) {
             TextView deviceName = (TextView) convertView.findViewById(R.id.tvDeviceName);
             TextView deviceAdress = (TextView) convertView.findViewById(R.id.tvDeviceAddress);

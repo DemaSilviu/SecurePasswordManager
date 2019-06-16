@@ -16,14 +16,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
+//Adaptor that SelectAccToShare class needs in order to populate the list view
 public class AccountShareAdaptor extends ArrayAdapter<BluetoothDevice> {
-
+// Array of strings which will be used to store the name,id,password
     String[] NameAdapter;
     String[] IdAdapter;
     String[] PasswordAdapter;
     Context myContext;
-
+//constructor
     public AccountShareAdaptor(Context context,String[] Name, String[] Id, String[] Password){
         super(context, R.layout.lv_acctoshare);
         this.NameAdapter = Name;
@@ -39,6 +39,7 @@ public class AccountShareAdaptor extends ArrayAdapter<BluetoothDevice> {
     public View getView(int position, View convertView, ViewGroup parent)
     {
         ViewHolder myViewHolder = new ViewHolder();
+        // if converView its null then assign buttons and textViews
         if (convertView == null) {
             LayoutInflater myInflator = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = myInflator.inflate(R.layout.lv_acctoshare, parent, false);
@@ -50,6 +51,7 @@ public class AccountShareAdaptor extends ArrayAdapter<BluetoothDevice> {
         } else {
             myViewHolder = (AccountShareAdaptor.ViewHolder) convertView.getTag();
         }
+        // next lines we set the text inside the TextViews to use it furthermore into Share class
         myViewHolder.myName.setText(NameAdapter[position]);
         myViewHolder.myId.setText(IdAdapter[position]);
         myViewHolder.myPassword.setText(PasswordAdapter[position]);
@@ -60,10 +62,10 @@ public class AccountShareAdaptor extends ArrayAdapter<BluetoothDevice> {
             {
                 View parentrow = (View) v.getParent();
                 ListView listView = (ListView) parentrow.getParent();
-
+                // get the position to know which item was clicked
                 final int position = listView.getPositionForView(parentrow);
 
-
+                // create a new intent and send informations through a Bundle of extras to share activity
                 Intent myIntent = new Intent(myContext, Share.class);
                 Bundle extras = new Bundle();
                 extras.putString("EXTRA_NAME",NameAdapter[position]);

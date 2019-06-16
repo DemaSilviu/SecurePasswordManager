@@ -52,10 +52,10 @@ public class ViewAccounts extends AppCompatActivity implements FileDetails
             InputStreamReader isr = new InputStreamReader(fp);
             BufferedReader bufferedReader = new BufferedReader(isr);
             String line;
+            // store lines from file inside Arrays
             while ((line = bufferedReader.readLine()) != null)
             {
 
-                Log.d("Line is :", line);
                 switch (i)
                 {
                     case 0:

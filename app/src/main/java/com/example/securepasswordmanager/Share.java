@@ -1,14 +1,4 @@
-/*
-Comment pt Darian xD
-Deci asta e clasa unde se intampla chestii. Mai jos ai butonu de Send
-(linia 110) aici primeste de la activitatea selectAccToShare contul care vrea userul sa il dea prin bluetooth.
- Le-am bagat pe toate intr-un bundle de extras si le-am luat aici in clasa asta. Mna bun dupa aia fac un string cu name,id(username) si password.
- Astea le pun intr-un string separate prin , si dupa ar trebui sa le bag pe toate intr-un fisier. In meniul aplicatiei e butonul de Received Accounts
- Momentan asta incarca conturile din fisieru cu conturi nu din fisieru ce ar trebui sa il fac cu conturile primite prin bluetooth.
- Problema e la linia 130. Cand apelez functia write. Ea se afla in clasa "BTService.java" e scrisa de 2 ori functia ca o data e scrisa sa o vada din clasa asta. Si aia o apeleaza defapt functia write
- Momentan acolo e doar sa scrie textul primit ca asa era codu' lu nenea asta cand trimitea dintr-un textview. Eu acolo vreau sa iau inputstreamu si sa fac un fisier(sau sa dau append daca exista fisieru
- adica daca o mai trimis inainte conturi si sa loadui dupa in activitatea ReceivedAccounts". Cam asta e filmul doar ca crapa acolo cand scriu funtia bytes
-*/
+
 package com.example.securepasswordmanager;
 
 import android.Manifest;
@@ -83,7 +73,7 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
         Button btnONOFF = (Button) findViewById(R.id.btnONOFF);
         Button SelectAccountBtn = (Button) findViewById(R.id.SelectAccountBtn);
         btnEnableDisable_Discoverable = (Button) findViewById(R.id.btnDiscoverable_on_off);
-        Button btnSend = (Button) findViewById(R.id.btnSend);
+        final Button btnSend = (Button) findViewById(R.id.btnSend);
         Button BackToMenu= (Button) findViewById(R.id.BackToMenuButton);
         lvNewDevices = (ListView) findViewById(R.id.lvNewDevices);
         mBTDevices = new ArrayList<>();
@@ -91,7 +81,7 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
         btnStartConnection = (Button) findViewById(R.id.btnStartConnection);
 
 
-        //Broadcasts when bond state changes (ie:pairing)
+        //Broadcasts when bond state changes
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         registerReceiver(mBroadcastReceiver4, filter);
 
@@ -102,7 +92,6 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
         btnONOFF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: enabling/disabling bluetooth.");
                 enableDisableBT();
             }
         });
@@ -113,15 +102,17 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
                 startConnection();
             }
         });
-
+// this method is responsable of sending the data through a socket
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
+                // get extras from the intent that sends it
                 Bundle extras = getIntent().getExtras();
                 String SELECTED_NAME = extras.getString("EXTRA_NAME");
                 String SELECTED_ID = extras.getString("EXTRA_ID");
                 String SELECTED_PASSWORD = extras.getString("EXTRA_PASSWORD");
+                //construct the string which will be send through a socket output
                 StringBuilder myStringBuilder = new StringBuilder(SELECTED_NAME);
                 myStringBuilder.append(",");
                 myStringBuilder.append(SELECTED_ID);
@@ -129,15 +120,21 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
                 myStringBuilder.append(SELECTED_PASSWORD);
                 String finalString = myStringBuilder.toString();
                 byte[] bytes = finalString.getBytes(Charset.defaultCharset());
-                mBluetoothConnection.write(bytes);
+                StringBuilder btnSendMessageToast = new StringBuilder(SELECTED_NAME);
+                btnSendMessageToast.append(" Account was send successfully!");
+                String finalStringToast = btnSendMessageToast.toString();
+                btnSendMessage(finalStringToast);
+                startActivity(new Intent(Share.this,MainActivity.class));
             }
         });
+        // SelectAccToShare activity will be shown to the user and he must choose which account he wants to share
         SelectAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Share.this,SelectAccToShare.class));
             }
         });
+        //go back to first menu of the application
         BackToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,36 +146,29 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
 
     }
-    // Create a BroadcastReceiver for ACTION_FOUND
+    // BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            // When discovery finds a device
+            // When  finds a device
             if (action.equals(mBluetoothAdapter.ACTION_STATE_CHANGED)) {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, mBluetoothAdapter.ERROR);
 
                 switch(state){
                     case BluetoothAdapter.STATE_OFF:
-                        Log.d(TAG, "onReceive: STATE OFF");
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
-                        Log.d(TAG, "mBroadcastReceiver1: STATE TURNING OFF");
                         break;
                     case BluetoothAdapter.STATE_ON:
-                        Log.d(TAG, "mBroadcastReceiver1: STATE ON");
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
-                        Log.d(TAG, "mBroadcastReceiver1: STATE TURNING ON");
                         break;
                 }
             }
         }
     };
 
-    /**
-     * Broadcast Receiver for changes made to bluetooth states such as:
-     * 1) Discoverability mode on/off or expire.
-     */
+
     private final BroadcastReceiver mBroadcastReceiver2 = new BroadcastReceiver() {
 
         @Override
@@ -188,7 +178,7 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
             if (action.equals(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED)) {
 
                 int mode = intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, BluetoothAdapter.ERROR);
-
+// helped to see which state the device was at the moment with messages on logchat
                 switch (mode) {
                     //Device is in Discoverable Mode
                     case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
@@ -216,29 +206,23 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
 
 
-    /**
-     * Broadcast Receiver for listing devices that are not yet paired
-     * -Executed by btnDiscover() method.
-     */
+    //Broadcast Receiver for listing devices that are not yet paired
+
     private BroadcastReceiver mBroadcastReceiver3 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            Log.d(TAG, "onReceive: ACTION FOUND.");
 
             if (action.equals(BluetoothDevice.ACTION_FOUND)){
                 BluetoothDevice device = intent.getParcelableExtra (BluetoothDevice.EXTRA_DEVICE);
-                mBTDevices.add(device);
-                Log.d(TAG, "onReceive: " + device.getName() + ": " + device.getAddress());
+                mBTDevices.add(device); // add a device
                 mDeviceListAdapter = new DeviceListAdapter(context, R.layout.device_adapter_view, mBTDevices);
                 lvNewDevices.setAdapter(mDeviceListAdapter);
             }
         }
     };
 
-    /**
-     * Broadcast Receiver that detects bond state changes (Pairing status changes)
-     */
+    //Broadcast Receiver that detects bond state changes
     private final BroadcastReceiver mBroadcastReceiver4 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -246,14 +230,11 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
             if(action.equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)){
                 BluetoothDevice mDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                //3 cases:
                 //case1: bonded already
                 if (mDevice.getBondState() == BluetoothDevice.BOND_BONDED){
-                    Log.d(TAG, "BroadcastReceiver: BOND_BONDED.");
-                    //inside BroadcastReceiver4
                     mBTDevice = mDevice;
                 }
-                //case2: creating a bone
+                //case2: creating a bond
                 if (mDevice.getBondState() == BluetoothDevice.BOND_BONDING) {
                     Log.d(TAG, "BroadcastReceiver: BOND_BONDING.");
                 }
@@ -268,14 +249,15 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
 
     @Override
+    // method to unregister the receivers
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mBroadcastReceiver1);
         unregisterReceiver(mBroadcastReceiver2);
         unregisterReceiver(mBroadcastReceiver3);
         unregisterReceiver(mBroadcastReceiver4);
-        //mBluetoothAdapter.cancelDiscovery();
     }
+    // stop the user back button from smartphone
     @Override
     public void onBackPressed() {
         if (1!=2) {
@@ -287,29 +269,28 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
 
 
-    //create method for starting connection
-//***remember the conncction will fail and app will crash if you haven't paired first
+    //create method for starting connection, IMPORTANT, if the devices havent paired then the application will not work
     public void startConnection(){
         startBTConnection(mBTDevice,MY_UUID_INSECURE);
     }
 
-    /**
-     * starting chat service method
-     */
-    public void startBTConnection(BluetoothDevice device, UUID uuid){
-        Log.d(TAG, "startBTConnection: Initializing RFCOM Bluetooth Connection.");
+    //starting chat service method
+    public void startBTConnection(BluetoothDevice device, UUID uuid)
+    {
 
         mBluetoothConnection.startClient(device,uuid);
     }
 
 
-
+// enable or disable bluetooth method
     public void enableDisableBT(){
-        if(mBluetoothAdapter == null){
+        if(mBluetoothAdapter == null)
+        {
             Log.d(TAG, "enableDisableBT: Does not have BT capabilities.");
         }
         if(!mBluetoothAdapter.isEnabled()){
             Log.d(TAG, "enableDisableBT: enabling BT.");
+            //enable BT
             Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivity(enableBTIntent);
 
@@ -318,6 +299,8 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
         }
         if(mBluetoothAdapter.isEnabled()){
             Log.d(TAG, "enableDisableBT: disabling BT.");
+
+            //disable BT
             mBluetoothAdapter.disable();
 
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -328,8 +311,7 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
 
     public void btnEnableDisable_Discoverable(View view) {
-        Log.d(TAG, "btnEnableDisable_Discoverable: Making device discoverable for 300 seconds.");
-
+// make device discoverable for 300 seconds
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
@@ -338,13 +320,12 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
         registerReceiver(mBroadcastReceiver2,intentFilter);
 
     }
-
+// discover other devices
     public void btnDiscover(View view) {
-        Log.d(TAG, "btnDiscover: Looking for unpaired devices.");
 
         if(mBluetoothAdapter.isDiscovering()){
+            // if already discover cancel discovery
             mBluetoothAdapter.cancelDiscovery();
-            Log.d(TAG, "btnDiscover: Canceling discovery.");
 
             //check BT permissions in manifest
             checkBTPermissions();
@@ -364,13 +345,8 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
         }
     }
 
-    /**
-     * This method is required for all devices running API23+
-     * Android must programmatically check the permissions for bluetooth. Putting the proper permissions
-     * in the manifest is not enough.
-     *
-     * NOTE: This will only execute on versions > LOLLIPOP because it is not needed otherwise.
-     */
+    //This method is required for all devices running API23+Android must programmatically check the permissions for bluetooth.
+
     private void checkBTPermissions() {
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
             int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
@@ -386,18 +362,13 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //first cancel discovery because its very memory intensive.
+        //first cancel discovery
         mBluetoothAdapter.cancelDiscovery();
 
-        Log.d(TAG, "onItemClick: You Clicked on a device.");
         String deviceName = mBTDevices.get(i).getName();
         String deviceAddress = mBTDevices.get(i).getAddress();
 
-        Log.d(TAG, "onItemClick: deviceName = " + deviceName);
-        Log.d(TAG, "onItemClick: deviceAddress = " + deviceAddress);
-
         //create the bond.
-        //NOTE: Requires API 17+? I think this is JellyBean
 
             Log.d(TAG, "Trying to pair with " + deviceName);
             mBTDevices.get(i).createBond();
@@ -406,7 +377,11 @@ public class Share extends AppCompatActivity implements AdapterView.OnItemClickL
             mBluetoothConnection = new BTService(Share.this);
 
     }
-    // use this in order to transform input received into a file
+    public void btnSendMessage(String msg) {
 
+        Toast toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+        toast.show();
+
+    }
 
 }

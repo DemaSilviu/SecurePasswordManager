@@ -11,7 +11,7 @@ import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+// class responsable when the user wants to save a new account inside his application
 public class SaveToFile extends AppCompatActivity implements Accounts,FileDetails
 {
     EditText UrlEditText;
@@ -43,6 +43,7 @@ public class SaveToFile extends AppCompatActivity implements Accounts,FileDetail
             }
         });
     }
+    // check if the user completed all fields
     public int checks()
     {
         if(TextUtils.isEmpty(UrlEditText.getText().toString()))
@@ -67,6 +68,7 @@ public class SaveToFile extends AppCompatActivity implements Accounts,FileDetail
         }
         return 1;
     }
+    // method which saves data inside the internal storage file
     public void Save()
     {
 
@@ -107,6 +109,7 @@ public class SaveToFile extends AppCompatActivity implements Accounts,FileDetail
             }
         }
     }
+    // method responsable for clearing the EditTexts in order to allow the user save another account without being force to click again NewAccount
     public void Clear()
     {
         UrlEditText.getText().clear();

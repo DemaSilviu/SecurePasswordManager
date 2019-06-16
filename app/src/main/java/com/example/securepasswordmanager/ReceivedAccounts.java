@@ -9,16 +9,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-
+//Adaptor that ReceivedAccounts needs in order to populate the list view
 public class ReceivedAccounts extends AppCompatActivity implements FileDetails
 {
-    private int LENGHT = getFileLenght();
+    private int LENGHT = 1;
     ListView myListView;
-    public String [] Url = new String [LENGHT];
     public  String [] Name = new String [LENGHT];
     public  String [] Id = new String[LENGHT];
     public  String [] Password = new String[LENGHT];
@@ -29,16 +29,34 @@ public class ReceivedAccounts extends AppCompatActivity implements FileDetails
         setContentView(R.layout.activity_received_accounts);
 
         myListView =(ListView) findViewById(R.id.AllAccountsReceivedBT);
-        getFileLenght();
+        inMethod();
         Load();
         ReceivedAccountsAdaptor  myAdapter = new ReceivedAccountsAdaptor(ReceivedAccounts.this,Name,Id,Password);
         myListView.setAdapter(myAdapter);
     }
+    public void inMethod()
+    {
+        FileOutputStream fp = null;
+        try {
+            fp = openFileOutput(Received_File, MODE_PRIVATE);
+            fp.write("LeagueOfLegends".getBytes());
+            fp.write('\n');
+            fp.write("wabla".getBytes());
+            fp.write('\n');
+            fp.write("wablagamingaccount".getBytes());
+            fp.write('\n');
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    // store from file into the Arrays
     public void Load()
     {
         int i = 0,j=0;
         try {
-            FileInputStream fp = openFileInput(File_Name);
+            FileInputStream fp = openFileInput(Received_File);
             InputStreamReader isr = new InputStreamReader(fp);
             BufferedReader bufferedReader = new BufferedReader(isr);
             String line;
@@ -48,19 +66,16 @@ public class ReceivedAccounts extends AppCompatActivity implements FileDetails
                 switch (i)
                 {
                     case 0:
-                        // Url[j] = line;
-                        break;
-                    case 1:
                         Name[j]=line;
                         break;
-                    case 2:
+                    case 1:
                         Id[j]=line;
                         break;
-                    case 3:
+                    case 2:
                         Password[j]=line;
                         break;
                 }
-                if(i!=3)
+                if(i!=2)
                 {
                     i++;
                 }
@@ -77,38 +92,6 @@ public class ReceivedAccounts extends AppCompatActivity implements FileDetails
         }
 
 
-    }public int getFileLenght()
-{
-    try{
-
-        File file =new File(File_Path);
-
-        if(file.exists())
-        {
-            int linenumber=0;
-            FileReader fr = new FileReader(file);
-            LineNumberReader lnr = new LineNumberReader(fr);
-
-
-
-            while (lnr.readLine() != null)
-            {
-                linenumber++;
-            }
-            lnr.close();
-
-
-            return linenumber/4;
-        }else
-        {
-            Toast.makeText(this,"File Does Not Exist !",Toast.LENGTH_SHORT).show();
-        }
-
-    }catch(IOException e)
-    {
-        e.printStackTrace();
     }
-    return 20;
-}
 }
 

@@ -38,6 +38,7 @@ public class EditAccounts extends AppCompatActivity implements Accounts,FileDeta
     }
     public void showFields()
     {
+        // get the extras that were put inside the bundle from AdaptorClass
         Bundle extras = getIntent().getExtras();
         String URL_SHOW = extras.getString("EXTRA_URL");
         String NAME_SHOW = extras.getString("EXTRA_NAME");
@@ -46,7 +47,7 @@ public class EditAccounts extends AppCompatActivity implements Accounts,FileDeta
         EditUrlEditText.setText(URL_SHOW.toString());
         EditNameEditText.setText(NAME_SHOW.toString());
         EditIdEditText.setText(ID_SHOW.toString());
-        EditPasswordEditText.setText(PASSWORD_SHOW.toString());
+        EditPasswordEditText.setText(PASSWORD_SHOW.toString()); // enables password inside Edit part
         EditPasswordEditText.setTransformationMethod(null);
 
     }
@@ -57,10 +58,11 @@ public class EditAccounts extends AppCompatActivity implements Accounts,FileDeta
             @Override
             public void onClick(View v)
             {
-                SaveEditedAcc();
+                SaveEditedAcc(); // method which will save the edited account
             }
         });
     }
+    //  method which helps changing the file when edited
     public static void ChangeFile(int lineNumber, String[] data) throws IOException
     {
         Path path = Paths.get(File_Path);
@@ -70,10 +72,10 @@ public class EditAccounts extends AppCompatActivity implements Accounts,FileDeta
         } catch (IOException e) {
             e.printStackTrace();
         }
-        lines.set(lineNumber , data[0]);
-        lines.set(lineNumber+1,data[1]);
-        lines.set(lineNumber+2, data[2]);
-        lines.set(lineNumber+3,data[3]);
+        lines.set(lineNumber , data[0]); // data[0]= URL
+        lines.set(lineNumber+1,data[1]);// data[1] = Name
+        lines.set(lineNumber+2, data[2]);// data[2] = Id(username)
+        lines.set(lineNumber+3,data[3]);// data[3] = Password
         try {
             Files.write(path, lines, StandardCharsets.UTF_8);
         } catch (IOException e) {
@@ -93,8 +95,10 @@ public class EditAccounts extends AppCompatActivity implements Accounts,FileDeta
         data[3]=PasswordEditText;
         checks();
         Intent myIntent = getIntent();
+        //get position to know which account the user wants to edit
         int position = myIntent.getIntExtra("Position", 0);
         position=position*4;
+        // all fields are completed
         if(checks() !=0)
         {
             try {
@@ -107,6 +111,7 @@ public class EditAccounts extends AppCompatActivity implements Accounts,FileDeta
         }
 
     }
+    // method responsable with user input
     public int checks()
     {
         if(TextUtils.isEmpty(EditUrlEditText.getText().toString()))

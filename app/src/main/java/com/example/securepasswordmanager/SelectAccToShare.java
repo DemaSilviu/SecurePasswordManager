@@ -16,7 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-
+// this class is giving the user choices to select which account he wants to share with other user
 public class SelectAccToShare extends AppCompatActivity implements FileDetails
 {
     private int LENGHT = getFileLenght();
@@ -37,7 +37,7 @@ public class SelectAccToShare extends AppCompatActivity implements FileDetails
         AccountShareAdaptor  myAdapter = new AccountShareAdaptor(SelectAccToShare.this,Name,Id,Password);
         myListView.setAdapter(myAdapter);
     }
-
+// store inside Arrays
     public void Load()
     {
         int i = 0,j=0;
@@ -48,11 +48,10 @@ public class SelectAccToShare extends AppCompatActivity implements FileDetails
             String line;
             while ((line = bufferedReader.readLine()) != null)
             {
-
+// we got only 3 cases, we don't need the URL when share an account
                 switch (i)
                 {
                     case 0:
-                        // Url[j] = line;
                         break;
                     case 1:
                         Name[j]=line;
@@ -82,6 +81,7 @@ public class SelectAccToShare extends AppCompatActivity implements FileDetails
 
 
     }
+    // get the lenght of the file
     public int getFileLenght()
     {
         try{

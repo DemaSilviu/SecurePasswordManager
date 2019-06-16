@@ -53,23 +53,12 @@ public class ReceivedAccountsAdaptor extends ArrayAdapter<BluetoothDevice>
         myViewHolder.myId.setText(IdAdapter[position]);
         myViewHolder.myPassword.setText(PasswordAdapter[position]);
         myViewHolder.myPassword.setTransformationMethod(new PasswordTransformationMethod());
+        final ViewHolder finalMyViewHolder = myViewHolder;
         myViewHolder.UseAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                View parentrow = (View) v.getParent();
-                ListView listView = (ListView) parentrow.getParent();
-
-                final int position = listView.getPositionForView(parentrow);
-
-
-                Intent myIntent = new Intent(myContext, Share.class);
-                Bundle extras = new Bundle();
-                extras.putString("EXTRA_NAME",NameAdapter[position]);
-                extras.putString("EXTRA_ID",IdAdapter[position]);
-                extras.putString("EXTRA_PASSWORD",PasswordAdapter[position]);
-                myIntent.putExtras(extras);
-                myContext.startActivity(myIntent);
+                finalMyViewHolder.myPassword.setTransformationMethod(null);
             }
         });
 
